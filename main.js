@@ -1,21 +1,22 @@
-// require `request` and the Node `fs` (filesystem) module
 var request = require("request");
 var fs = require("fs");
 
 request
-    .get("https://sytantris.github.io/http-examples") // Note 1
+    .get("https://sytantris.github.io/http-examples/future.jpg")
     .on("error", function(err) {
-        // Note 2
         throw err;
     })
     .on("response", function(response) {
-        // Note 3
-        console.log("Response Status Code: ", response.statusCode);
+        console.log(
+            "The response code is " +
+                response.statusCode +
+                response.statusMessage +
+                " the content type is: " +
+                response.headers["content-type"]
+        );
+        console.log("Downloading Image");
     })
-    .pipe(fs.createWriteStream("./downloaded.html")); // Note 4
-
-// Notes:
-// 1. `request.get` is equivalent to `request()`
-// 2. `request.on('error', callback)` handles any error
-// 3. `request.on('response, callback)` handles the response
-// 4. What is happening here?
+    .pipe(fs.createWriteStream("./future.jpg"))
+    .on("finish", function() {
+        console.log("Download Complete");
+    });
